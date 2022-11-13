@@ -3,6 +3,7 @@ require 'sequel'
 require "JSON"
 require "faker"
 require "byebug"
+require "dry-validation"
 
 DB = Sequel.sqlite
 
@@ -15,6 +16,14 @@ end
 33.times do
   DB[:posts].insert(name: Faker::FunnyName.four_word_name, body: Faker::Books::Lovecraft.paragraph)
 end
+
+class PostContract < Dry::Validation::Contract
+  params do
+    required(:name).filled(:string)
+    required(:body).filled(:string)
+  end
+end
+
 
 app = Hanami::Router.new do
   # GET /posts
@@ -34,6 +43,10 @@ app = Hanami::Router.new do
   post "/posts", to: ->(env) do
     params = Rack::Request.new(env).params
     begin
+      contract = PostContract.new.call(params)
+      params = contract.to_h
+      raise contract.errors.to_h if contract.errors.any?
+
       post_entity = DB[:posts].insert(params)
       [201, {}, [DB[:posts].first(id: post_entity).to_json]]
     rescue => error

@@ -11,3 +11,5 @@ gem "sqlite3"
 gem "faker"
 
 gem "byebug"
+
+gem "dry-validation"
