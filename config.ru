@@ -1,10 +1,77 @@
 require "hanami/router"
+require 'sequel'
+require "JSON"
+require "faker"
+require "byebug"
+
+DB = Sequel.sqlite
+
+DB.create_table :posts do
+  primary_key :id
+  String :name
+  Text :body
+end
+
+33.times do
+  DB[:posts].insert(name: Faker::FunnyName.four_word_name, body: Faker::Books::Lovecraft.paragraph)
+end
 
 app = Hanami::Router.new do
-  get     "/posts", to: ->(env) { [200, {}, ["Hello World"]] }
-  post    "/posts", to: ->(env) { [200, {}, ["Hello World"]] }
-  patch   "/posts", to: ->(env) { [200, {}, ["Hello World"]] }
-  delete  "/hanami", to: ->(env) { [200, {}, ["Hello World"]] }
+  # GET /posts
+  get     "/posts", to: ->(env) { [200, {}, [DB[:posts].all.to_json]] }
+
+  # GET /posts/1
+  get     "/posts/:id", to: ->(env) do
+    post = DB[:posts].first(id: env["router.params"][:id])
+    if post
+      [200, {}, [DB[:posts].first(id: env["router.params"][:id]).to_json]]
+    else
+      [404, {}, []]
+    end
+  end
+
+  # POST /posts
+  post "/posts", to: ->(env) do
+    params = Rack::Request.new(env).params
+    begin
+      post_entity = DB[:posts].insert(params)
+      [201, {}, [DB[:posts].first(id: post_entity).to_json]]
+    rescue => error
+      [422, {}, [error.to_json]]
+    end
+  end
+
+  # PUT /posts/1
+  put "/posts/:id", to: ->(env) do
+    posts = DB[:posts].where(id: env["router.params"][:id])
+    if posts.any?
+      params = Rack::Request.new(env).params
+      begin
+        posts.update(params)
+        [200, {}, [DB[:posts].first]]
+      rescue => error
+        [422, {}, [error.to_json]]
+      end
+      [200, {}, [DB[:posts].first(id: env["router.params"][:id]).to_json]]
+    else
+      [404, {}, []]
+    end
+  end
+
+  # DELETE /posts/1
+  delete  "/posts/:id", to: ->(env) do
+    posts = DB[:posts].where(id: env["router.params"][:id])
+    if posts.any?
+      begin
+        posts.delete
+        [200, {}, []]
+      rescue => error
+        [422, {}, [error.to_json]]
+      end
+    else
+      [404, {}, []]
+    end
+  end
 end
 
 run app
