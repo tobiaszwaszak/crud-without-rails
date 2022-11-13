@@ -1,5 +1,5 @@
 require "hanami/router"
-require 'sequel'
+require "sequel"
 require "JSON"
 require "faker"
 require "byebug"
@@ -24,13 +24,12 @@ class PostContract < Dry::Validation::Contract
   end
 end
 
-
 app = Hanami::Router.new do
   # GET /posts
-  get     "/posts", to: ->(env) { [200, {}, [DB[:posts].all.to_json]] }
+  get "/posts", to: ->(env) { [200, {}, [DB[:posts].all.to_json]] }
 
   # GET /posts/1
-  get     "/posts/:id", to: ->(env) do
+  get "/posts/:id", to: ->(env) do
     post = DB[:posts].first(id: env["router.params"][:id])
     if post
       [200, {}, [DB[:posts].first(id: env["router.params"][:id]).to_json]]
@@ -72,7 +71,7 @@ app = Hanami::Router.new do
   end
 
   # DELETE /posts/1
-  delete  "/posts/:id", to: ->(env) do
+  delete "/posts/:id", to: ->(env) do
     posts = DB[:posts].where(id: env["router.params"][:id])
     if posts.any?
       begin
