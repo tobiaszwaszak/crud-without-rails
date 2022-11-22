@@ -2,6 +2,8 @@
 
 source "https://rubygems.org"
 
+ruby "3.1.2"
+
 gem "hanami-router", "~> 2.0.0.rc1"
 gem "puma", "~> 6.0.0"
 
