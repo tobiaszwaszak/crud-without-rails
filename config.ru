@@ -1,6 +1,6 @@
 require "hanami/router"
 require 'active_record'
-require "JSON"
+require "json"
 require "faker"
 require "byebug"
 require "dry-validation"

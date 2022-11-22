@@ -17,3 +17,4 @@ gem "activerecord"
 # gem "rom", "~> 5.3.0"
 # gem "rom-sql", "~> 3.2"
 gem 'pg', '~> 1.4', '>= 1.4.5'
+gem 'json', '~> 2.6', '>= 2.6.2'
