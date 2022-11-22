@@ -14,4 +14,4 @@ gem "dry-validation", "~> 1.10.0"
 gem "activerecord"
 # gem "rom", "~> 5.3.0"
 # gem "rom-sql", "~> 3.2"
-gem "sqlite3", "~> 1.5.3"
+gem 'pg', '~> 1.4', '>= 1.4.5'

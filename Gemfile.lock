@@ -61,11 +61,11 @@ GEM
       hansi (~> 0.2.0)
       mustermann (= 1.1.2)
     nio4r (2.5.8)
+    pg (1.4.5)
     puma (6.0.0)
       nio4r (~> 2.0)
     rack (2.2.4)
     ruby2_keywords (0.0.5)
-    sqlite3 (1.5.3-arm64-darwin)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     zeitwerk (2.6.6)
@@ -79,8 +79,8 @@ DEPENDENCIES
   dry-validation (~> 1.10.0)
   faker (~> 2.23.0)
   hanami-router (~> 2.0.0.rc1)
+  pg (~> 1.4, >= 1.4.5)
   puma (~> 6.0.0)
-  sqlite3 (~> 1.5.3)
 
 BUNDLED WITH
    2.3.25

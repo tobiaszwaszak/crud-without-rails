@@ -7,15 +7,10 @@ require "dry-validation"
 
 
 ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: 'development.sqlite3'
+  ENV["DATABASE_URL"]
 )
 
 class Post < ActiveRecord::Base
-end
-
-33.times do
-  Post.create(name: Faker::FunnyName.four_word_name, body: Faker::Books::Lovecraft.paragraph)
 end
 
 class PostContract < Dry::Validation::Contract
